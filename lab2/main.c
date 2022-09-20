@@ -41,12 +41,9 @@ int main()
 			_delay_ms(5);
 			PORTB = 0;
 			if(k == 1)
-			{
 				k <<= 4; // Variant 2
-			} else
-			{
+			else
 				k <<= 1;
-			}
 		}
 	}
 	return 0;
