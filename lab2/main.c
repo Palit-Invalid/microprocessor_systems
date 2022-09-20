@@ -1,7 +1,7 @@
 #include<avr/io.h>
 #include<util/delay.h>
 
-unsigned char code8[] = { 0b11000000,    // 0
+uint8_t code8[] = { 0b11000000,    // 0
                           0b11111001,    // 1
                           0b10100100,    // 2
                           0b10110000,    // 3
@@ -31,8 +31,8 @@ int main()
 	PORTB = 0;
 	while(1)
 	{
-		unsigned char a = PINC;
-		unsigned char k = 1;
+		uint8_t a = PINC;
+		uint8_t k = 1;
 		while(a != 0)
 		{
 			PORTD = code8[a - (a/16*16)];
