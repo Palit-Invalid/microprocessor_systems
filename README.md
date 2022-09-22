@@ -253,12 +253,12 @@ avrdude -c ponyser -p m16 -U flash:w:lab.hex
 #include <avr/io.h>
 #include <util/delay.h>
 
-int main(void) {
+int main() {
     DDRA = 0xFF;
     PORTA = 0;
     /*4-хбитный интерфейс, 1строка*/
 
-    for (uint8\_t i = 0; i < 2; i++) {
+    for(uint8\_t i = 0; i < 2; i++) {
         PORTA = 0b00101000;
         PORTA &= 0b11110111;
         PORTA = 0b11001000;
@@ -273,7 +273,7 @@ int main(void) {
 	PORTA &= 0b11110111;
 	_delay_us(42); 
 
-    while (1) {
+    while(1) {
         /*Очистить дисплей и установить курсор в начало*/
         PORTA = 0b00001000;  
         PORTA &= 0b11110111;
@@ -282,7 +282,7 @@ int main(void) {
         _delay_ms(2);
         uint8_t i = 48;    //Код символа "0" в таблице CGROM
         do {
-            if (i == 0x3A)
+            if(i == 0x3A)
 	        i = 0x41;//Код символа "A"
             PORTA = i & 0xF0 | 0b1100;
             PORTA &= 0b11110111;
@@ -291,7 +291,7 @@ int main(void) {
             _delay_ms(1000);
 
             \*Если выведены 8 символов, устанавливаем адрес DDRAM 63\*/
-            if (i == 0x37) {
+            if(i == 0x37) {
                 PORTA = 0b10111000;
                 PORTA &= 0b11110111;
                 PORTA = 0b11111000;
@@ -372,11 +372,11 @@ int main(void)
 
         /*Цикл "разбора" числа на цифры*/
         k = 1;
-        for (uint8\_t i = 0; i<2; i++) {
+        for(uint8\_t i = 0; i<2; i++) {
             if (i == 1)
-                PORTD = code8[U-(U/10)\*10] & 0b01111111;
+                PORTD = code8[U - (U/10)*10] & 0b01111111;
             else
-                PORTD=code8[U-(U/10)\*10];  
+                PORTD=code8[U - (U/10)*10];  
                 PORTB=k; 
                 _delay_ms(5); 
                 PORTB = 0; 			
@@ -474,9 +474,9 @@ int main()
         /*Цикл "разбора" числа на цифры*/
         k = 1;
         for(char i = 0; i < 4; i++) {
-            PORTD = code8[clk-(clk/10)\*10];	//Получаем и заносим в порт D единицы числа 
+            PORTD = code8[clk - (clk/10)*10];	//Получаем и заносим в порт D единицы числа 
             if (i == 2 && sec%2 == 0)
-                PORTD &=0b01111111;	// Мигающая точка
+                PORTD &= 0b01111111;	// Мигающая точка
                 clk /= 10;
                 PORTB = k; 
                 _delay_ms(5); 
@@ -484,7 +484,7 @@ int main()
                 if(k==1)
                     k <<= 2; 
                 else
-                    k<<=1; 
+                    k <<= 1; 
         }
     }
 }
@@ -527,7 +527,7 @@ ISR (TIMER1_COMPA_vect) {
 #include <avr/io.h>
 #include <util/delay.h>
 
-int main (void) {
+int main() {
     DDRA = 0xFF;
     PORTA = 0;
     DDRD = 0xF0;
@@ -541,7 +541,7 @@ int main (void) {
     };
 
     /*4-хбитный интерфейс, 1строка*/   
-    for (uint8\_t i = 0; i < 2; i++) {
+    for(uint8\_t i = 0; i < 2; i++) {
         PORTA = 0b00101000;
         PORTA &= 0b11110111;
         PORTA = 0b11001000;
@@ -562,7 +562,7 @@ int main (void) {
     PORTA = 0b00011000;   
     PORTA &= 0b11110111;
     _delay_ms(2);
-    while (1) {
+    while(1) {
         while (1) {
             PORTD = ~scan;
             _delay_ms(1);
@@ -601,7 +601,7 @@ int main (void) {
         count_num++;
 
         /*Если выведены 8 символов, устанавливаем адрес DDRAM 63*/
-        if(count\_num == 8) {
+        if(count_num == 8) {
             PORTA = 0b10111000;
             PORTA &= 0b11110111;
             PORTA = 0b11111000;
