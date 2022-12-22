@@ -1,4 +1,5 @@
 #include<avr/io.h>
+#include<avr/eeprom.h>
 #include<util/delay.h>
 
 #include<stdlib.h>
@@ -31,12 +32,16 @@ int main()
 
 	DDRD = 0xFF;
 	DDRB = 0xFF;
+    DDRA = 0;
 
 	// Random init
-	// srand(time(NULL));
-	int num = 61;
+	// srand(100);
+	// int num = rand();
 
-    
+    uint16_t randinit; 
+    srand(eeprom_read_word(&randinit));
+    eeprom_write_word(&randinit, rand());
+    int num = rand();
 
 	while(1)
 	{
@@ -44,10 +49,10 @@ int main()
 		
         PORTB = 0b00000001;
         PORTD = code8[num/10];
-        _delay_ms(100);
+        _delay_ms(1000);
         PORTB = 0b00000100;
         PORTD = code8[num % 10];
-        _delay_ms(100);
+        _delay_ms(1000);
 
 	}
 	return 0;
