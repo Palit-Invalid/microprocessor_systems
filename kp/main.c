@@ -16,36 +16,39 @@ uint8_t code8[] = { 0b11000000,
                     0b10000000,
                     0b10010000 };
 
-void test_numbers(uint8_t array[])
+void ADC_Init()
 {
-    for(int i = 0; i < sizeof(code8); i++)
-    {
-        PORTD = code8[i];
-        _delay_ms(2000);
-    }
+    ADCSRA = 0b10000111;            /* Включаем АЦП. делитель 128  */
+    ADMUX = 0b01000000;             /* Выбираем опорное напряжение и 0 канал */
+}
+
+int ADC_Read(uint8_t channel)
+{
+    int Ain, AinLow;
+    
+    ADMUX |= (channel & 0b00000111);    /* Выбор канала для чтения */
+    ADCSRA |= (1 << ADSC);               /* Начало преобразования */
+    while((ADCSRA & (1 << ADIF)) == 0);  /* Ждем окончания преобразования */
+    
+    _delay_us(10);
+    AinLow = (int) ADCL;                 /* Читаем младший байт*/
+    Ain = (int) ADCH * 256;              /* Читаем старший байт и соединяем в одно двух байтное число */
+    Ain += AinLow;                
+    return Ain;                         /* Возвращаем цифровой код */
 }
 
 int main()
 {
-    // Setup ports: 0 - input, FF - output
-	// DDR{A,B,C,D}
-
 	DDRD = 0xFF;
 	DDRB = 0xFF;
-    DDRA = 0;
 
-	// Random init
-	// srand(100);
-	// int num = rand();
+    ADC_Init();
 
-    uint16_t randinit; 
-    srand(eeprom_read_word(&randinit));
-    eeprom_write_word(&randinit, rand());
-    int num = rand();
-
+    int num;
 	while(1)
 	{
-        // test_numbers(code8);
+        srand(ADC_Read(0));
+        num = rand() % 100;
 		
         PORTB = 0b00000001;
         PORTD = code8[num/10];
